@@ -1,0 +1,36 @@
+{% extends "core.html" %}
+
+{% block head %}
+    <title>OTP Verification - PANCHAYAT HELPDESK</title>
+{% endblock %}
+
+{% block otp_verification %}
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-xs-4 text-center mx-auto pt-5 mt-5">
+        <a href="{{url_for('index')}}"><img src="{{url_for('static', filename='images/odisha_logo.png')}}" alt="" class="img-fluid logo"></a>
+    </div>
+</div>
+
+    <div class="d-flex align-items-center ">
+
+        <div class="card bg-white login_card border-0 mt-5">
+            <div class="card-body px-5">
+                <div class="text-center border-bottom pb-2">
+                    <h4 class="card-title text-primary">OTP Verification</h4>
+                    <!-- <small class="text-secondary">Enter your email and we'll send you instructions to reset your password</small> -->
+                </div>                    
+                <form action="{{url_for('verify_otp')}}" method="post" class="mt-4" >
+                    <label for="otp" class="text-secondary">Enter OTP</label>
+                    <input type="text" name="otp" id="otp" pattern="[0-9]{4}" max="9999" maxlength="4" class="form-control" placeholder="XXXX" required>
+                    
+                    
+                    <button type="submit" class="btn btn-primary btn-sm rounded mt-4">Verify</button>
+                    
+                </form>
+                
+            </div>            
+        </div>
+    </div>
+
+     
+{% endblock %}
