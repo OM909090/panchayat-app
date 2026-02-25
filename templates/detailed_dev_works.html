@@ -1,0 +1,97 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set name = session['username'].split(' ') %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set dist = session['dist'] %}
+{% set state = session['state'] %}
+{% set user_type = session['user_type'] %}
+
+{% block detailed_issue %}
+        <div class="col-xl-8 col-lg-10 col-md-9 col-sm-9 mx-auto" id="issue_details">
+            <div class="row mb-4">
+                <div class="col-xl-12 col-lg-12 col-md-12 ">
+                    <div class="card p-4 bg-light border-0 text-start shadow welcome_card" >
+                        <div class="card-header d-flex justify-content-between">
+                            <span>
+                                <h4 class="card-title mb-0 pb-0">{{work['w_name']}}</h4>
+                                <p class="mt-0 pt-0"><strong>{{work['work_added_date']}}</strong></p>
+                            </span>
+                            <span>
+                                <small class="badge bg-success badge-sm p-2">{{work['work_id']}}</small>
+                                <p>{{work['d_start']}}-{{work['d_end']}}</p>
+                            </span>
+                            
+                        </div>
+                         <div class="card-body">
+                            <div class="row">
+                                 
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Block :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['block']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Panchayat :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['panchayat']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Activity :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['activity']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Work Type :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['w_type']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Scheme :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['scheme']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">component :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['component']}} </h5>
+                                </div>
+                                
+
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">expenditure :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">&#8377; {{"%.2f" | format(work['expenditure'] | float)}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">estimate :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">&#8377; {{" %.2f " | format(work['estimate'] | float)}} </h5>
+                                </div>
+
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">focus_area :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{work['focus_area']}} </h5>
+                                </div>                               
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">status :</p>
+                                    <h5 class="mt-0 pt-0 mb-3 text-primary">{{work['status']}} </h5>
+                                </div>
+                                 
+                                <div class="col-12">
+                                    <p class="mb-0 pb-0">desc :</p>
+                                    <h5>    {{work['desc']}}</h5>
+                                    
+                                </div>
+                            </div>
+                         </div>
+                          
+                    </div>
+                </div>
+                
+            </div>
+
+             
+        </div>
+        
+    </div>
+     
+</div>
+
+ 
+
+{% endblock %}
