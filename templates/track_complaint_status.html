@@ -1,0 +1,99 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['user_name'] %}
+{% set nick_name = session['first_name'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set block = session['block'] %}
+{% set panchayat = session['panchayat'] %}
+
+{% block track_complaint_status %}
+
+
+
+
+
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+            <div class="row mb-4">
+                <div class="col-8">
+                    <div class="row">
+                    {% for i in issues_list %}
+                    {% set date = i['complain_raised_date'].split(', ') %}
+                    {% if i['complain_status'] != 'Closed' %}
+                    <div class="col-6">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title d-flex justify-content-between">
+                                    <span class="text-primary "> {{date[0]}}</span>
+                                    <span>
+                                        <a href="{{url_for('detailed_issues', t = i['token'])}}" class="text-dark"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                    </span>
+                                </h6>
+                                <h6 class="text-muted">{{i['category']}} </h6>
+                                <h6>{{i['complaint_caption']|capitalize}}</h6>
+
+                                
+                            </div>
+                            <div class="card-footer bg-info">
+                                <small>Complaint Status : <strong> {{i['complain_status']}}</strong> </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card bg-primary text-light">
+                        <div class="card-body">
+                            <h6 class="card-title display-6">{{p_data['panchayat'] | upper}} </h6>
+                            <h6>{{p_data['block']}} </h6>
+                            <hr>
+                            {% if session['user_type'] == 'Citizen' %}
+                                <h6>Contact Person: {{p_data['contact_person']}} </h6>
+                                <h6>Contact Number : {{p_data['contact_num']}} </h6>
+                                <h6>Email Id : {{p_data['email']}} </h6>
+                            {% elif session['user_type'] == 'Management' %}
+                                <h4>Resolved Complaints</h6>
+                                <table class="table table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">category</th>
+                                            <th scope="col"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% set count = namespace(value=1) %}
+                                        {% for i in issues_list %}
+                                        {% if i['complain_status'] == 'Closed' %}
+                                            <tr>
+                                                <td>{{"%02d" %  count.value}}</td>
+                                                <td><small>{{i['complaint_caption']}}</strong></td>
+                                                <td>
+                                                    <a href="{{url_for('detailed_issues', t = i['token'])}}" class="text-dark"><i class="fa-solid fa-magnifying-glass"></i></a>
+                                                </td>
+                                            </tr>
+                                            {% set count.value = count.value + 1 %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             
+        </div>
+        
+    </div>
+    
+</div>
+
+ 
+
+{% endblock %}
