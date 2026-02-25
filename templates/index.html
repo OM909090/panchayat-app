@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Home Page</title>
+
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+        }
+
+        /* header {
+            min-height: 50px;
+            background: lightcyan;
+        } */
+
+        footer {
+            min-height: 50px;
+        }
+    </style>
+{% endblock %}
+    
+{% block index %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-8 col-lg-8 col-md-12 mx-auto mt-4 mb-4">
+                <div class="card border-0 p-5 text-center welcome-box">
+                    <h3>Welcome to</h3>
+                    <img src="../static/images/panchayati-raj.jpg" class="img-fluid " alt="">
+                    <h6 class="display-2">PANCHAYAT HELPDESK</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+        
