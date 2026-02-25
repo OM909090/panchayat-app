@@ -1,0 +1,239 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set nick_name = session['first_name'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set block = session['block'] %}
+{% set panchayat = session['panchayat'] %}
+
+{% block c_dashboard %}
+
+
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+            <div class="row mb-4">
+                <div class="col-xl-5 col-lg-5 col-md-5">
+                    <div class="card bg-light p-5 border-0 text-start shadow welcome_card">
+                        <h6>
+                            Welcome, <br><span class="display-6">{{u_name}}</span>
+                        </h6>
+                        <hr>
+                        <small class="mb-0 pb-0">Panchayat Helpdesk</small>
+                        <h6 class="mt-0 pt-0">{{panchayat | upper}}, {{block |upper}} </h6>
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-7 col-md-7">
+                    <div class="row" id="content_box">
+                        <div class="col-6 mb-3">
+                            <div class="card border voter">
+                                <div class="card-body">
+                                    <div class="card-title d-flex justify-content-between">
+                                        <img src="../static/images/voterid.svg" alt="">
+                                        <h5 class="my-3">Voter Id Services</h5>
+                                    </div>
+                                    <hr>
+                                    <p>Apply for new Voter Id or search voter id using name/no</p>
+                                    <p class="d-flex justify-content-between">
+                                        <a href="https://electoralsearch.eci.gov.in/" target="_blank" class="btn btn-danger">SEARCH 
+                                            <i class="fas fa-search"></i>
+                                        </a>
+                                        <a href="https://voters.eci.gov.in/" target="_blank" class="btn btn-outline-dark">VOTER PORTAL</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="card border subhadra">
+                                <div class="card-body">
+                                    <div class="card-title d-flex justify-content-between">
+                                        <img src="../static/images/subhadra.png" alt="" width="17%">
+                                        <h5 class="my-3">Subhadra Yojana</h5>
+                                    </div>
+                                    <hr>
+                                    <p>Apply for new Voter Id or search voter id using name/no</p>
+                                    <p class="d-flex justify-content-between">
+                                        <a href="https://subhadra.odisha.gov.in/citizen-login" target="_blank" class="btn btn-success">TRACK STATUS
+                                        </a>
+                                        <a href="https://subhadra.odisha.gov.in/grievance-login" target="_blank" class="btn btn-outline-dark">GRIEVANCE PORTAL</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Development Works</h4>
+                            <table class="table table-responsive  table-hover table-bordered">
+                                <thead >
+                                    <tr class="table-dark">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Duration</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col"><i class="fas fa-ellipsis-v" aria-hidden="true"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set count = namespace(value=1) %}
+                                    {% for i in dw_list %}
+                                    <tr>
+                                        <td>{{"%02d" %  count.value}}</td>
+                                        <td>{{i['w_name']}}</td>
+                                        <td>{{i['d_start']}}-{{i['d_end']}} </td>
+                                        <td>{{i['status']}}</td>
+                                        <td><a href="{{url_for('detailed_dev_works', w_id = i['work_id'])}}"><i class="fas fa-search"></i></a></td>
+                                    </tr>
+                                    {% set count.value = count.value + 1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="card bg-info">
+                        <div class="card-body ">
+                            <div class="card-title">
+                                <h4>Register Your Complaint</h4>
+                                <form action="{{url_for('register_complaint')}}" method="post">
+                                    
+                                    <div class="mb-2">                                        
+                                        <select name="complaint_category" id="complaint_category" class="form-select rounded-0" onchange="myCategory()">
+                                            <option value="">Select category</option>
+                                            <option value="Corruption and Mismanagement">Corruption and Mismanagement</option>
+                                            <option value="Infrastructure and Development">Infrastructure and Development</option>
+                                            <option value="Scheme and Program Implementation">Scheme and Program Implementation</option>
+                                            <option value="Social Issues">Social Issues</option>
+                                            <option value="Grievance Redressal">Grievance Redressal</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2">    
+                                        <select name="sub_category" id="sub_category" class="form-select rounded-0 " required disabled>
+                                            <option value="">Select sub-category</option>
+                                            <optgroup label="Corruption and Mismanagement" id="corr_mism" style="display: none;">
+                                                <option value="Financial irregularities">Financial irregularities</option>
+                                                <option value="Lack of transparency">Lack of transparency</option>
+                                                <option value="Favoritism and nepotism">Favoritism and nepotism</option>
+                                                <option value="Non-compliance with regulations">Non-compliance with regulations</option>
+                                            </optgroup>
+                                            <optgroup label="Infrastructure and Development" id="infra_deve">
+                                                <option value="Poor quality of infrastructure projects">Poor quality of infrastructure projects</option>
+                                                <option value="Delayed or incomplete projects">Delayed or incomplete projects</option>
+                                                <option value="Lack of maintenance">Lack of maintenance</option>
+                                                <option value="Inefficient resource allocation">Inefficient resource allocation</option>
+                                            </optgroup>
+                                            <optgroup label="Scheme and Program Implementation" id="schm_pro">
+                                                <option value="Non-implementation of schemes">Non-implementation of schemes</option>
+                                                <option value="Poor implementation of schemes">Poor implementation of schemes</option>
+                                                <option value="Misappropriation of funds meant for schemes">Misappropriation of funds meant for schemes</option>
+                                                <option value="Lack of awareness about schemes">Lack of awareness about schemes</option>
+                                                <option value="Inaccessibility of schemes">Inaccessibility of schemes</option>
+                                            </optgroup>
+                                            <optgroup label="Social Issues" id="so_issue">
+                                                <option value="Discrimination and injustice">Discrimination and injustice</option>
+                                                <option value="Land disputes">Land disputes</option>
+                                                <option value="Public nuisance">Public nuisance</option>
+                                                <option value="Lack of social services">Lack of social services</option>
+                                                <option value="Inaccessibility of schemes">Inaccessibility of schemes</option>
+                                            </optgroup>
+                                            <optgroup label="Grievance Redressal" id="g_redressal">
+                                                <option value="Non-response to complaints">Non-response to complaints</option>
+                                                <option value="Lack of accountability">Lack of accountability</option>
+                                                <option value="Lack of transparency in grievance redressal">Lack of transparency in grievance redressal</option>
+                                            </optgroup>
+                                             
+                                            
+                                        </select>
+                                    </div>
+                                    <input type="text" name="issue_short" id="issue_short" placeholder="Enter issue caption" class="form-control rounded-0 mb-2">
+                                    <textarea name="complaint" id="complaint" class="form-control mb-2 rounded-0" rows="5" placeholder="Write your Complaint"></textarea>
+
+
+                                    <button type="submit" class="btn btn-dark">Register Complaint</button>
+                                    <button type="reset" class="btn btn-secondary">Reset</button>
+                                </form>
+
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+                
+                 
+                
+            </div>
+        </div>
+        
+    </div>
+    
+</div>
+
+<script>
+    function myCategory(){
+        var cat = document.getElementById('complaint_category').value;
+        var sub_cat = document.getElementById('sub_category');
+
+        var corruption_mismanagement = document.getElementById('corr_mism');
+        var infrastructure_development = document.getElementById('infra_deve');
+        var scheme_program = document.getElementById('schm_pro');
+        var social_issues = document.getElementById('so_issue');
+        var grievance_redressal = document.getElementById('g_redressal');
+
+        if(cat == "Corruption and Mismanagement"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "block";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Infrastructure and Development"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "block";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Scheme and Program Implementation"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "block";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Social Issues"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "block";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 'Grievance Redressal'){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "block";
+        } else {
+            sub_cat.disabled = true;
+            sub_cat.value = "";
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        }
+
+
+    }
+    
+
+</script>
+
+{% endblock %}
