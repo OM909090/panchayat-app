@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block sidebar_c %}
+
+<div class="container-fluid">
+    <div class="row my-4">
+        <div class="col-xl-2 col-lg-2 col-md-3 col-sm-3 ">
+            <div class="card bg-dark rounded shadow"  id="sidebar_section">
+                <div class="card-header bg-dark text-center text-info pt-5">
+                    <h4>PANCHAYAT<br>HELPDESK</h4>
+                </div>
+                <div class="card-body navbar navbar-expand-sm navbar-dark rounded pt-1">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar2">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse w-auto " id="sidebar2">
+                        
+                        <div class="row">
+                            <div class="col-12 bg-dark text-center text-light sidebar_header">
+                                <strong></strong>
+                            </div>
+                            <hr>
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <div class="btn-group-vertical menu">
+                                    <a href="{{url_for('dashboard')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'dashboard' %} active {% else %} {% endif %}">Dashboard</a>
+                                    <a href="{{url_for('profile')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'profile' %} active {% else %} {% endif %}">Profile</a>
+                                </div>
+
+                                <div class="btn-group-vertical menu2">
+                                    {% if session['user_type'] == 'Admin' %}
+                                    <a href="{{url_for('manage_panchayat')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'manage_panchayat' %} active {% else %} {% endif %}">Manage Panchayat</a>
+                                    <a href="{{url_for('all_raised_issues')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'complaint_status' %} active {% else %} {% endif %}">Raised Issues</a>
+                                    <a href="{{url_for('dev_works')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'dev_works' %} active {% else %} {% endif %}">Development Works</a>
+                                    {% elif session['user_type'] == 'Management' %}
+                                    <a href="{{url_for('track_complaint_status')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'complaint_status' %} active {% else %} {% endif %}">Complaint Status</a>
+                                    <a href="{{url_for('dev_works')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'dev_works' %} active {% else %} {% endif %}">Development Works</a>
+                                    {% elif session['user_type'] == 'Citizen' %}
+                                    <a href="{{url_for('antyodaya')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'antyodaya' %} active {% else %} {% endif %}">Antyodaya Gruha Yojana</a>
+                                    <a href="{{url_for('pmay_grameen')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'pmay_grameen' %} active {% else %} {% endif %}">PMAY - Grameen</a>
+                                    <a href="{{url_for('track_complaint_status')}}" class="btn btn-dark  text-start my-1 {% if session['page'] == 'complaint_status' %} active {% else %} {% endif %}">Complaint Status</a>
+
+                                    {% endif %}
+                                </div>
+                            </div>
+                             
+                        </div>
+                        
+                    <hr>
+                    
+                  </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+
+
+
+        {% block c_dashboard %} {% endblock %}
+        {% block a_dashboard %} {% endblock %}
+        {% block m_dashboard %} {% endblock %}
+        {% block track_complaint_status %}{% endblock %}
+        {% block manage_panchayat %}{% endblock %}        
+        {% block raised_issues %}{% endblock %}
+        {% block detailed_issue %}{% endblock %}
+        {% block dev_works %}{% endblock %}
+        {% block antyodaya %}{% endblock %}
+        {% block pmay_grameen %}{% endblock %}
+
+
+
+
+
+
+
+        
+{% endblock %}
