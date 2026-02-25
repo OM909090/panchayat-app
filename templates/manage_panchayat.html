@@ -1,0 +1,111 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set name = session['username'].split(' ') %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set dist = session['dist'] %}
+{% set state = session['state'] %}
+{% set user_type = session['user_type'] %}
+
+{% block manage_panchayat %}
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9" id="panchayat_table">
+            <div class="row mb-4">
+                <div class="col-xl-12 col-lg-12 col-md-12 ">
+                    <div class="card p-4 bg-light border-0 text-start shadow welcome_card" >
+                        <h4 class="card-title">Registered Panchayat List</h4>
+                        
+                        <div class="p_table">
+                        <table class="table table-bordered table-responsive table-hover ">
+                            <thead>
+                            <tr class="bg-secondary">
+                                <th scope="col">#</th>
+                                <th scope="col">Block</th>
+                                <th scope="col">Panchayat</th>
+                                <th scope="col">Contact Person</th>
+                                <th scope="col">Added date</th>
+                                <th scope="col" class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% set count = namespace(value=1) %}
+                                {% for i in p_list %}
+                                {% set d = i['panchayat_added_date'].strftime('%d-%b-%Y') %}
+                                    <tr>
+                                        <td>{{"%02d" %  count.value}}</td>
+                                        <td>{{i['block']}}</td>
+                                        <td>{{i['panchayat']}}</td>
+                                        <td>{{i['contact_person']}}</td>
+                                        
+                                        <td>{{d}}</td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-lg text-primary" data-bs-toggle="modal" data-bs-target="#view_{{i['panchayat_id']}}"><i class="fas fa-address-card"></i></button>
+                                            <button type="button" class="btn btn-lg text-danger" data-bs-toggle="modal" data-bs-target="#inactive_{{i['panchayat_id']}}"><i class="far fa-trash-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                    {% set count.value = count.value + 1 %}
+                                    <!-- view more Modal -->
+                                    <div class="modal fade dark_t_bg" id="view_{{i['panchayat_id']}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="view_{{i['panchayat_id']}}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content bg-dark text-light">
+                                            <div class="modal-header border-secondary">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">{{i['panchayat']}},&nbsp;</h1>
+                                                    <small>
+                                                         {{i['block']}}
+                                                    </small>
+                                                    <small class="badge bg-warning text-dark rounded-pill ms-2">{{i['panchayat_id']}}</small>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Contact Person : {{i['contact_person']}}<br>
+                                                Contact Number : {{i['contact_num']}}<br>
+                                                Email Id : {{i['email']}} 
+                                            </div>
+                                             
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- inactivate more Modal -->
+                                    <div class="modal fade dark_t_bg" id="inactive_{{i['panchayat_id']}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="view_{{i['panchayat_id']}}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content bg-dark text-light">
+                                            <div class="modal-header border-secondary">
+                                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Are you sure to deactivate this Panchayat ??</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5><small>Panchayat : </small> {{i['panchayat']}}, <small>Block : </small> {{i['block']}}</h5>
+                                                <h6><small>Managed by : </small>{{i['contact_person']}}</h6>
+                                                <hr>
+                                                <form action="{{url_for('deactivate_panchayat', pid = i['panchayat_id'])}}" method="post">
+                                                    <label for="deactivate_reason">Mention the reason of Deactivation</label>
+                                                    <textarea name="deactivate_reason" id="deactivate_reason" class="form-control" required></textarea>
+                                                    <button type="submit" class="btn btn-danger mt-3">Yes</button>
+                                                    <button type="button" class="btn btn-secondary mt-3" data-bs-dismiss="modal" aria-label="Close">No</button>
+                                                </form>
+                                            </div>
+                                             
+                                        </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+             
+        </div>
+        
+    </div>
+     
+</div>
+
+ 
+
+{% endblock %}
