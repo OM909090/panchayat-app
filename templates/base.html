@@ -1,0 +1,143 @@
+{% extends "core.html" %}
+
+{% if session %}
+    {% if session['user_id'] %}
+        {% set username = session['username'].split(' ') %}
+        {% set name = session['username'] %}
+    {% elif session['panchayat_id'] %}
+        {% set username = session['username'].split(' ') %}
+    {% else %}
+        {% set username = 'Guest' %}
+    {% endif %}
+{% else %}
+    {% set username = 'Guest' %}
+{% endif %}
+{% set user_type = session['user_type'] %}
+
+{% block base %}
+    <div class="container-fluid">
+        <div class="row d-flex">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-4 col-xs-4 text-center text-sm-start text-md-start text-xl-start text-lg-start  order-2 order-sm-1 d-inline-flex">
+                <a href="{{url_for('index')}}"><img src="{{url_for('static', filename='images/odisha_logo.png')}}" alt="" class="img-fluid logo"></a>
+                <span class="mt-3 ms-4">
+                    <h6 class="display-6 border-bottom mb-0">PANCHAYAT HELPDESK</h6>
+                    <p class="pt-0 mt-0">Keonjhar, Odisha</p>
+                </span>
+                
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-8 col-xs-8 d-flex flex-column align-self-center order-1 order-sm-2">
+                <div class="d-flex justify-content-center justify-content-sm-end justify-content-md-end order-2">
+                    <p> {% if session['user_id'] %}
+
+                        <span class="Welcome me-3">
+                            <strong class="float-end me-4">Welcome {{username[0]}}</strong><br>
+                            <small class="float-end me-4">{{user_type}}</small>
+
+                        </span>
+                        {% elif session['panchayat_id'] %}
+                        <span class="Welcome me-3">
+                            <strong class="float-end me-4">Welcome {{username[0]}}</strong><br>
+                            <small class="float-end me-4">{{user_type}}</small>
+                        </span>
+                        {% else %}
+                        <span class="Welcome me-3"><strong>Welcome {{username}}</strong></span>
+                        {% endif %}
+                        <span>
+                            {% if session['user_id'] %}
+                                <h4 class="me-3">
+                                    <a href="{{url_for('dashboard')}}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Dashboard" class="btn btn-primary">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                    </a>
+                                </h4>
+                                <h4 class="me-3">
+                                    <a href="{{url_for('logout')}}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Logout" class="btn btn-dark">
+                                        <i class="fa-solid fa-right-from-bracket"></i>
+                                    </a>
+                                </h4>
+                            {% elif session['panchayat_id'] %}
+                            <h4 class="me-3">
+                                <a href="{{url_for('logout')}}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Logout" class="btn btn-dark">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                </a>
+                            </h4>
+                            {% else %}
+                                <h4 class="me-3">
+                                    <a href="{{url_for('login_page')}}" data-bs-toggle="tooltip" data-bs-placement="auto" title="Login" class="btn btn-dark btn-sm">
+                                        <i class="fa fa-sign-in"></i>
+                                    </a>
+                                </h4>
+                                <h4 class="">
+                                    <a href="{{url_for('account_creation_page')}}" class="btn btn-dark btn-sm "  data-bs-toggle="tooltip" data-bs-placement="auto" title="Create Account" >
+                                        <i class="fas fa-user-plus"></i>
+                                    </a>
+                                </h4>
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+                <div class="d-flex justify-content-center justify-content-sm-end justify-content-md-end order-1 mb-2 mt-0 pt-0 pb-1 contacts">
+                    <small class="me-3"><i class="fas fa-phone-square me-1 text-dark"></i> <strong>+91-1234567980</strong></small>
+                    <small><i class="fas fa-envelope me-1"></i> <strong>support@panchayat.com</strong></small>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+
+    {% block index %}{% endblock %}    
+    {% block sidebar_c %}{% endblock %}
+    
+
+
+
+
+
+    
+
+    <footer class="footer pt-3">
+        <div class="container-fluid">
+            <div class="row text-dark">
+                <div class="col-md-6 text-center text-md-start">
+                    <p>&copy; 2025 <strong>Panchayat Helpdesk</strong>. All rights reserved. Designed & Developed by <Strong>MOMBIS Tech</Strong></p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline footer-links">
+                        <li class="list-inline-item">
+                            <a href="#" class="text-decoration-none text-dark">
+                                Privacy Policy&nbsp;&nbsp;&nbsp;|
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#" class="text-decoration-none text-dark">
+                                Terms of Service&nbsp;&nbsp;&nbsp;|
+                            </a>
+                        </li>
+                        <li class="list-inline-item ">
+                            <a href="#" class="text-decoration-none text-dark">
+                                Sitemap
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </footer>
+
+    
+    <script>
+        $(document).ready(function(){
+            $(".alert-dismissible").fadeTo(2000, 500).slideUp(500, function(){
+                $(".alert-dismissible").alert('close');
+            });
+        })
+    </script>
+
+    
+    
+
+
+{% endblock %}
