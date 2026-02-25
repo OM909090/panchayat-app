@@ -1,0 +1,197 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set dist = session['dist'] %}
+{% set state = session['state'] %}
+{% set user_type = session['user_type'] %}
+
+{% block a_dashboard %}
+
+
+
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+            <div class="row mb-4">
+                <div class="col-xl-5 col-lg-5 col-md-5">
+                    <div class="card bg-light pt-5 pb-5 px-5 border-0 text-start shadow welcome_card">
+                        <span class="d-flex justify-content-between mb-0 pb-0">Welcome<p class="badge bg-success rounded-pill">{{user_type | upper}}</p>  </span>
+                        <h2 class="mt-0 pt-0 "> {{u_name | upper}}</h2>
+                        
+                        <hr>
+                        <h5 class="mb-0 pb-0">Panchayat Helpdesk </h5>
+                        {{dist}}, {{state}}
+                        
+
+
+                    </div>
+                </div>
+                
+                <div class="col-xl-7 col-lg-7 col-md-7">
+                    <div class="row" id="count_box">
+                        <div class="col-4 mb-3">
+                            <div class="card border">
+                                <div class="card-body py-4">
+                                    <h6 class="card-title">Complaints Lodged</h6>
+                                    <hr>
+                                    {% if count_issues %}
+                                    <h3>{{ '%03d' %  count_issues['raised_issues_count']}}</h3>
+                                    {% else %}
+                                    <h3>000</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body py-4">
+                                    <h6 class="card-title">Pending Complaints</h6>
+                                    <hr>
+                                    {% if count_issues %}
+                                    <h3>{{'%03d' % count_issues['pending_issues_count']}}</h3>
+                                    {% else %}
+                                    <h3>000</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body py-4">
+                                    <h6 class="card-title">Closed Complaints</h6>
+                                    <hr>
+                                    {% if count_issues %}
+                                    <h3>{{'%03d' % count_issues['closed_issues_count']}}</h3>
+                                    {% else %}
+                                    <h3>000</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body py-4">
+                                    <h6 class="card-title">Total Visitors</h6>
+                                    <hr>
+                                    <h3>{{'%03d' % v_count}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="card">
+                                <div class="card-body py-4">
+                                    <h6 class="card-title">Registered Panchayat</h6>
+                                    <hr>
+                                    <h3>{{'%03d' % p_count}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-4" id="raised_issue_box">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Issue Raised</h3>
+                            
+                        </div>
+                        <div class="card-body">
+                               
+                                <ul class="list-unstyled u_lis" >
+                                    
+                                    {% for i in issues_list[:-4:-1] %}
+                                    <li class="bg-dark text-white">
+                                        <h6 class="text-info d-flex justify-content-between mb-0 pb-0">
+                                            {{i['complaint_caption'][:28]}}..
+                                            <a href="{{url_for('detailed_issues', t = i['token'])}}" class="btn btn-primary btn-sm"><i class="fa-solid fa-magnifying-glass"></i></a> 
+                                        </h6>
+                                        
+                                        <p>{{i['complaint'][:80]}} ...</p>
+                                        <h6 class="text-end text-warning">{{i['complain_raised_by']}},
+                                            <small class="text-secondary mt-0 pt-0">{{i['panchayat']}}, {{i['block']}}</small>
+                                        </h6>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                
+                        </div>
+                        <div class="card-footer text-center">
+                            <a href="{{url_for('all_raised_issues')}}" class="btn btn-dark btn-sm text-decoration-none pt-2"><h6>View All</h6></a>
+                        </div>
+        
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h4>Registered Panchayat</h4>
+                                <ul class="list-unstyled p_lis" >
+                                    {% for i in p_list[:-7:-1] %}
+                                        <li>
+                                            <h6><strong>{{i['panchayat']}}, {{i['block']}}</strong></h6>
+                                            <p>Added Date : {{i['panchayat_added_date'].strftime('%d-%b-%Y')}}</p>
+                                        </li>
+
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+        
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4>Development Works</h4>
+                            <table class="table table-responsive  table-hover table-bordered">
+                                <thead >
+                                    <tr class="table-dark">
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col"><i class="fas fa-ellipsis-v" aria-hidden="true"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set count = namespace(value=1) %}
+                                    {% for i in dw_works %}
+                                    <tr>
+                                        <td>{{"%02d" %  count.value}}</td>
+                                        <td>{{i['w_name']}}<br>                                            
+                                            <span>{{i['panchayat']}}, {{i['block']}}</span>
+                                            <span class="badge rounded-pill bg-warning text-dark">{{i['status']}}</span>
+                                        </td>
+                                        <!-- <td></td> -->
+                                        <td><a href="{{url_for('detailed_dev_works', w_id = i['work_id'])}}"><i class="fas fa-search"></i></a></td>
+                                    </tr>
+                                    {% set count.value = count.value + 1 %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+
+
+
+
+            
+        </div>
+        
+    </div>
+     
+</div>
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
+
+{% endblock %}
