@@ -1,0 +1,215 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set name = session['username'].split(' ') %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set dist = session['dist'] %}
+{% set state = session['state'] %}
+{% set user_type = session['user_type'] %}
+
+{% block detailed_issue %}
+        <div class="col-xl-8 col-lg-10 col-md-9 col-sm-9 mx-auto" id="issue_details">
+            <div class="row mb-4">
+                <div class="col-xl-12 col-lg-12 col-md-12 ">
+                    <div class="card p-4 bg-light border-0 text-start shadow welcome_card" >
+                        <div class="card-header">
+                            <h4 class="card-title d-flex justify-content-between">
+                                <span>{{issue['complaint_caption']}}</span>
+                                <span>Token: <small class="badge rounded-pill bg-success">{{issue['token']}}</small></span>
+                            </h4>
+                        </div>
+                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Raised By :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['complain_raised_by']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Raised Date :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['complain_raised_date']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Block :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['block']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Panchayat :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['panchayat']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Category :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['category']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Sub Category :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['sub_category']}} </h5>
+                                </div>
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Complaint Status :</p>
+                                    <h5 class="mt-0 pt-0 mb-3 {% if issue['complain_status'] == 'Rejected' %} text-danger {% elif  issue['complain_status'] == 'Pending' %} text-warning {% elif issue['complain_status'] == 'Closed' %} text-success {% else %} text-primary {% endif %}">{{issue['complain_status']}} </h5>
+                                </div>
+                                {% if issue['complain_approved_by'] %}
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Complaint Proccessed By :</p>
+                                    <h5 class="mt-0 pt-0 mb-3 text-primary">{{issue['complain_approved_by']}} </h5>
+                                </div>
+                                {% endif %}
+                                {% if issue['reason_of_reject'] %}
+                                <div class="col-6">
+                                    <p class="mb-0 pb-0">Reason of Rejection :</p>
+                                    <h5 class="mt-0 pt-0 mb-3">{{issue['reason_of_reject']}} </h5>
+                                </div>
+                                {% endif %}
+                                <div class="col-12">
+                                    <p class="mb-0 pb-0">Complaint Description :</p>
+                                    <h5>    {{issue['complaint']}}</h5>
+                                    
+                                </div>
+                            </div>
+                         </div>
+
+                        {% if session['user_type'] == 'Citizen' %}
+                            {% if issue['complain_status'] == 'Pending' %}
+                            <div class="card-footer">
+                                <button type="button" class="btn btn-danger" title="Edit" data-bs-toggle="modal" data-bs-target="#delete_issue" >
+                                    <i class="far fa-trash-alt"></i></i>
+                                </button>
+                            </div>
+                            {% endif %}
+                        {% else %}
+                            {% if issue['complain_status'] == 'Pending' %}
+                                <div class="card-footer">
+                                    <a href="{{url_for('approve_issue', token = issue['token'])}}" class="btn btn-success" title="Approve"><i class="fas fa-check"></i></a>
+                                    <!-- <a href="" class="btn btn-danger ms-3" title="Reject"><i class="fas fa-times"></i></a> -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reject_modal" title="Reject">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            {% elif issue['complain_status'] == 'Proccessed' %}
+                                <div class="card-footer">
+                                    <a href="{{url_for('resolve_issue', token = issue['token'])}}" class="btn btn-info" title="Resolved"><i class="fas fa-thumbs-up"></i></a>
+                                </div>
+                            {% elif issue['complain_status'] == 'Closed' %}
+                                <div class="card-footer">
+                                    <p class="text-muted">Issue is resolved </p>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                          
+                         <!-- Reject Issue Modal -->
+                         <div class="modal fade" id="reject_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content bg-dark text-light">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="reject_modalLabel">Are you sure to reject this one ?? </h1>
+                                    <button type="button" class="btn btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="{{url_for('reject_issue', token = issue['token'])}}" method="post">
+                                        <label for="reject_reason">Mention the reason of rejection</label>
+                                        <textarea name="reject_reason" id="reject_reason" class="form-control" required></textarea>
+                                        <button type="submit" class="btn btn-danger mt-3">Reject</button>
+                                    </form>
+                                    
+                                </div>
+                                <!-- <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    
+                                </div> -->
+                                </div>
+                            </div>
+                            </div>
+                            <!-- edit Issue Modal -->
+                         <div class="modal fade" id="delete_issue" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content bg-dark text-light">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="delete_issueLabel">Delete Issue</h1>
+                                    <button type="button" class="btn btn-close btn-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <h6 >Are you sure to delete this one ?? </h6>
+                                    <a href="{{url_for('delete_issue', token = issue['token'])}}" class="btn btn-danger">Delete</a>
+                                    <button type="button" class="btn btn-success"  data-bs-dismiss="modal">No</button>                        
+                                </div>
+                                
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+                
+            </div>
+
+             
+        </div>
+        
+    </div>
+     
+</div>
+<script>
+    function myCategory(){
+        var cat = document.getElementById('complaint_category').value;
+        var sub_cat = document.getElementById('sub_category');
+
+        var corruption_mismanagement = document.getElementById('corr_mism');
+        var infrastructure_development = document.getElementById('infra_deve');
+        var scheme_program = document.getElementById('schm_pro');
+        var social_issues = document.getElementById('so_issue');
+        var grievance_redressal = document.getElementById('g_redressal');
+
+        if(cat == "Corruption and Mismanagement"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "block";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Infrastructure and Development"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "block";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Scheme and Program Implementation"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "block";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == "Social Issues"){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "block";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 'Grievance Redressal'){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "block";
+        } else {
+            sub_cat.disabled = true;
+            sub_cat.value = "";
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        }
+
+
+    }
+    
+
+</script>
+ 
+
+{% endblock %}
