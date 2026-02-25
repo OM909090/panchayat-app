@@ -1,0 +1,54 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['user_name'] %}
+{% set nick_name = session['first_name'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set block = session['block'] %}
+{% set panchayat = session['panchayat'] %}
+
+{% block pmay_grameen %}
+
+
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card pb-5">
+                        <img src="../static/images/PMAY_2.0_Disclaimer.jpg" alt="" class="img-fluid rounded-bottom-0 rounded-top">
+                        <h4 class="text-center py-4 mb-0 bg-dark text-light">ସର୍ଭେ ପ୍ରଣାଳୀ ସମ୍ବଦ୍ଧରେ ଅଧିକ ଜାଣିବା ପାଇଁ ସମ୍ପୃକ୍ତ ଗୋଷ୍ଠୀ ଉନ୍ନୟନ ଅଧିକାରୀ କିମ୍ବା ଟୋଲ ଫ୍ରୀ ନମ୍ବର <span class="text-info">୦୬୭୪-୬୮୧୭୭୭୭</span> ରେ ଯୋଗାଯୋଗ କରନ୍ତୁ ।</h4>
+                        
+                        <div class="row mx-0 my-0">
+                            <div class="col-4 bg-warning text-center">
+                                <a href="https://pmaymis.gov.in/PMAYMIS2_2024/PMAY_SURVEY/EligiblityCheck.aspx" class="btn btn-warning p-4 text-decoration-none" target="_blank">
+                                    <h4 >
+                                        <small>Apply Online </small>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div class="col-4 bg-secondary rounded-0 text-center">
+                                <a href="https://rhodisha.gov.in/survey24/pradhanmantriawaasyojana_survey_process.pdf" class="btn btn-secondary p-4 text-decoration-none" target="_blank">
+                                    <h4>
+                                        <small>Survey Proccess </small>
+                                    </h4>
+                                </a>
+                            </div>
+                            <div class="col-4 bg-info text-center">
+                                <a href="https://rhodisha.gov.in/guidelines/PMAY(G)_guidelines.pdf" class="btn btn-info p-4 text-decoration-none" target="_blank">
+                                    <h4>
+                                        <small>Rules and Guidelines </small><i class="fas fa-file-alt"></i>
+                                    </h4>
+                                </a>
+                            </div>
+                        </div>
+                        
+                    </div>
+                     
+                </div>                 
+            </div>             
+        </div>        
+    </div>    
+</div>
+ 
+
+{% endblock %}
