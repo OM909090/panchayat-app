@@ -1,0 +1,488 @@
+{% extends "core.html" %}
+
+{% block head %}
+    <title>Signup - PANCHAYAT HELPDESK</title>
+{% endblock %}
+
+{% block signup %}
+    
+    <div class="d-flex align-items-center mt-5">
+        <div class="card w-75 signup_card white_t_bg border-0 mt-4 shadow">
+            <div class="card-body px-5">
+                <div class="row text-start">
+                    <div class="col-1">
+                        <a href="{{url_for('index')}}" class="btn btn-light text-primary" data-bs-toggle="tooltip" data-bs-placement="auto" title="Home"><i class="fa-solid fa-house"></i></a>
+                    </div>
+                    <div class="col-10 text-center">
+                        <h4 class="card-title text-primary">CREATE ACCOUNT</h4>
+                        <small class="text-secondary">Provide all valid details to create your account</small>
+                    </div>
+                    <div class="col-1"></div>
+                    
+                </div>                    
+                <form action="{{url_for('create_account')}}" method="post" class="mt-4 needs-validation" novalidate>
+                    <div class="row bg bg-secondary text-white rounded py-3 px-2 mb-4">
+                        <div class="col-4" >
+                            <label for="user_type">User Type</label>
+                            <select class="form-select" name="user_type" id="user_type" required>
+                                <option value="">Select User Type</option>
+                                <option value="Citizen">Citizen</option>
+                                <option value="Management">Management</option>
+                                {% if admin_count == 0 %}
+                                    <option value="Admin">Admin</option>
+                                {% endif %}
+                            </select>
+                       
+                           
+                        </div>
+                        <div class="col-4 text-light">
+                            <label for="email_id" class="text-light">Email Address</label>
+                            <input type="text" name="email_id" id="email_id" class="form-control" placeholder="Enter your email address here" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"  required>
+                        </div>
+                        <div class="col-4 text-light">
+                            <div>
+                                <label for="password" class="text-light">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="Enter your Password" required>
+                            </div>
+                            <div>
+                                <div class="form-check form-switch float-end">
+                                    <label class="form-check-label float-start me-5  text-light" for="flexSwitchCheckChecked"><small>Hide</small></label>
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" onclick="hide_show_function()">
+                                    <label class="form-check-label  text-light" for="flexSwitchCheckChecked"><small>Show</small></label>
+                                  </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-2">
+                            <label for="f_name" class="text-secondary">First Name</label>
+                            <input type="text" name="f_name" id="f_name" class="form-control" placeholder="Enter your First name" pattern="[A-Za-z]{2,}" required>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-2">
+                            <label for="m_name" class="text-secondary">Middle Name (Optional)</label>
+                            <input type="text" name="m_name" id="m_name" class="form-control" placeholder="Enter Middle name">
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-2">
+                            <label for="l_name" class="text-secondary">Last Name</label>
+                            <input type="text" name="l_name" id="l_name" class="form-control" placeholder="Enter your Last name" required>
+                        </div>
+                        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 mb-2">
+                            <label for="c_num" class="text-secondary">Gender</label>
+                            <select name="gender" id="gender" class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <label for="dob" class="text-secondary">Date of Birth</label>
+                            <input type="date" name="dob" id="dob" class="form-control"  max="2025-12-31" min="1950-01-01">
+                        </div>
+                        <div class="col-3 mb-2">
+                            <label for="c_num" class="text-secondary">Contact Number</label>
+                            <input type="number" name="c_num" id="c_num" class="form-control" placeholder="Enter Contact Number" pattern="[6-9]{1}[0-9]{9}" required>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <label for="email_id" class="text-secondary">Blocks</label>
+                            <select class="form-select" name="block_list" id="block_list" onchange="myFunction()" required>
+                                <option value="" selected>Select Block</option>
+                                {% for i in b_list %}
+                                    <option value="{{i}}">{{i}}</option>                                         
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-3 mb-2">
+                            <label for="email_id" class="text-secondary">Panchayat</label>
+                            <select class="form-select" name="panchayat" id="panchayat" required disabled>
+                                <option value="" selected>Select Panchayat</option>
+                                <optgroup id="anandapur" label="Anandapur" style="display: none;">
+                                {% for i in anandapur %}                                       
+                                    <option value="{{i}}">{{i}}</option>                                       
+                                {% endfor %}
+                                </optgroup>
+                                <optgroup id="banspal" label="Banspal" style="display: none;">
+                                    {% for i in banspal %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="champua" label="Champua" style="display: none;">
+                                    {% for i in champua %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Ghasipura" label="Ghasipura" style="display: none;">
+                                    {% for i in Ghasipura %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Ghatagaon" label="Ghatagaon" style="display: none;">
+                                    {% for i in Ghatagaon %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Harichandanpur" label="Harichandanpur" style="display: none;">
+                                    {% for i in Harichandanpur %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Hatadihi" label="Hatadihi" style="display: none;">
+                                    {% for i in Hatadihi %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Jhumpura" label="Jhumpura" style="display: none;">
+                                    {% for i in Jhumpura %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Joda" label="Joda" style="display: none;">
+                                    {% for i in Joda %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+
+
+                                <optgroup id="Sadar" label="Sadar" style="display: none;">
+                                    {% for i in Sadar %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Patana" label="Patana" style="display: none;">
+                                    {% for i in Patana %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Saharapada" label="Saharapada" style="display: none;">
+                                    {% for i in Saharapada %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+
+                                <optgroup id="Telkoi" label="Telkoi" style="display: none;">
+                                    {% for i in Telkoi %}                                       
+                                        <option value="{{i}}">{{i}}</option>                                       
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-6 mb-2">
+                            <label for="address" class="text-secondary">Full Address</label>
+                            <textarea name="address" id="address" rows="1" class="form-control"></textarea>
+                        </div>                        
+                        <div class="col-6 pt-4">
+                            <div class="form-check float-end">
+                                <input class="form-check-input " type="checkbox" id="agree" name="agree" value="agree" onchange="enable_btn(this);" required>
+                                <label class="form-check-label"><small class="text-muted">I agree with all statements in <a href="">Terms and Service</a></small></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 text-end mt-4">
+                            <button type="submit" class="btn btn-primary rounded mt-2" id="create" disabled>Create Account</button>
+                            <button type="reset"class="btn btn-secondary rounded mt-2">Reset Form</button>
+                            <p>Already have an account ?? <a href="{{url_for('login_page')}}" class="btn btn-link text-decoration-none btn-sm">Sign in</a></p>
+                        </div>
+                    </div>
+                    
+
+                    
+                    
+
+                    
+                    
+                </form>
+            </div>            
+        </div>
+    </div>
+
+     
+    <script>
+        function hide_show_function() {
+          var pwd = document.getElementById("password");
+          if (pwd.type === "password") {
+            pwd.type = "text";
+          } else {
+            pwd.type = "password";
+          }
+        }
+    </script>
+
+    <script>
+        function enable_btn(checkbox){
+            if(checkbox.checked == true){
+                document.getElementById("create").disabled = false;
+            }else{
+                document.getElementById("create").disabled = true;
+            }
+        }
+        var x = document.getElementById()
+    </script>
+
+    <script>
+        
+        function myFunction(){
+            var x = document.getElementById("block_list").value;
+            var y = document.getElementById('panchayat');
+            var anandapur = document.getElementById("anandapur");
+            var banspal = document.getElementById("banspal");
+            var champua = document.getElementById("champua");
+            var Ghasipura = document.getElementById("Ghasipura");
+            var Ghatagaon = document.getElementById("Ghatagaon");
+            var Harichandanpur = document.getElementById("Harichandanpur");
+            var Hatadihi = document.getElementById("Hatadihi");
+            var Jhumpura = document.getElementById("Jhumpura");
+            var Joda = document.getElementById("Joda");
+            var Sadar = document.getElementById("Sadar");
+            var Patana = document.getElementById("Patana");
+            var Saharapada = document.getElementById("Saharapada");
+            var Telkoi = document.getElementById("Telkoi");
+
+            if (x == 'Anandapur') {
+                y.disabled = false;
+                anandapur.style.display = "block";
+                banspal.style.display = "none";
+                champua.style.display = "none";
+                Ghasipura.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Banspal') {
+                y.disabled = false;
+                banspal.style.display = "block";
+                anandapur.style.display = "none";
+                champua.style.display = "none";
+                Ghasipura.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Champua') {
+                y.disabled = false;
+                champua.style.display = "block";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Ghasipura.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Ghasipura') {
+                y.disabled = false;
+                Ghasipura.style.display = "block";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Ghatagaon') {
+                y.disabled = false;
+                Ghatagaon.style.display = "block";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Harichandanpur') {
+                y.disabled = false;
+                Harichandanpur.style.display = "block";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Hatadihi.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Hatadihi') {
+                y.disabled = false;
+                Hatadihi.style.display = "block";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Jhumpura.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }                
+            else if (x == 'Jhumpura') {
+                y.disabled = false;
+                Jhumpura.style.display = "block";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Joda.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }                
+            else if (x == 'Joda') {
+                y.disabled = false;
+                Joda.style.display = "block";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Sadar.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }          
+            else if (x == 'Sadar') {
+                y.disabled = false;
+                Sadar.style.display = "block";
+                Joda.style.display = "none";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Patana.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }          
+            else if (x == 'Patana') {
+                y.disabled = false;
+                Patana.style.display = "block";
+                Sadar.style.display = "none";
+                Joda.style.display = "none";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Saharapada.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Saharapada') {
+                y.disabled = false;
+                Saharapada.style.display = "block";
+                Patana.style.display = "none";
+                Sadar.style.display = "none";
+                Joda.style.display = "none";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            else if (x == 'Telkoi') {
+                y.disabled = false;
+                Saharapada.style.display = "none";
+                Patana.style.display = "none";
+                Sadar.style.display = "none";
+                Joda.style.display = "none";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Telkoi.style.display = "block";
+            }
+            else {
+                y.disabled = true;
+                y.value = '';
+                Saharapada.style.display = "none";
+                Patana.style.display = "none";
+                Sadar.style.display = "none";
+                Joda.style.display = "none";
+                Jhumpura.style.display = "none";
+                Hatadihi.style.display = "none";
+                Harichandanpur.style.display = "none";
+                Ghatagaon.style.display = "none";
+                Ghasipura.style.display = "none";
+                champua.style.display = "none";
+                anandapur.style.display = "none";
+                banspal.style.display = "none";
+                Telkoi.style.display = "none";
+            }
+            
+            
+
+        }
+        
+
+    </script>
+
+
+{% endblock %}
