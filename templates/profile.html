@@ -1,0 +1,202 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['username'] %}
+{% set name = u_name.split(' ') %}
+{% set f_name = name[0] %}
+{% set l_name = name[1] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set dist = session['dist'] %}
+{% set state = session['state'] %}
+{% set user_type = session['user_type'] %}
+
+{% block c_dashboard %}
+
+
+
+
+
+        <div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+            <div class="row mb-4">
+                <div class="col-xl-7 col-lg-7 col-md-7 ">
+                    <div class="card bg-light p-5 border-0 text-start shadow welcome_card">
+                        <div class="row">
+                            <div class="col-10">
+                                <h6 class="display-6">{{u_name | upper}}</h6>
+                                {% if profile['user_type'] == 'Citizen' %}
+
+                                {% else %}
+                                    <h6>{{profile['user_type']}}</h6>
+                                {% endif %}
+                                {% if profile['full_address'] %}
+                                <p>{{profile['full_address']}} </p>
+                                {% endif %}
+                            </div>
+                            <div class="col-2 text-end">
+                                <h4 ><span class="badge badge-lg bg-info text-dark">{{u_id}}</span></h4>
+                            </div>
+                        </div>
+                        <h3>
+                            
+                        </h3>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>First Name : {{f_name}}</h6>
+                                {% if profile['middle_name'] %}
+                                {% endif %}
+                                <h6>Last Name : {{l_name}}</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>Gender : {{profile['gender']}} </h6>
+                                <h6>Date of Birth : {{profile['date_of_birth']}} </h6>
+                                
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-6">
+                                <h6>Contact Number : {{profile['contact_num']}} </h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>Email Id : {{profile['email']}} </h6>
+                            </div>
+                        </div>
+                        {% if profile['block'] %}
+                        <hr>
+                        
+                        <div class="row">
+                            <div class="col-6">
+                                {% if profile['block'] %}
+                                <h6>Block : {{profile['block']}} </h6>
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                {% if profile['panchayat'] %}
+                                <h6>Panchayat : {{profile['panchayat']}} </h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-5 col-md-7">
+                    <div class="card bg-info border-0">
+                        <div class="card-header">
+                            <h4 class="card-title">Update profile</h4>
+                        </div>
+                        <div class="card-body">
+                            <form action="{{url_for('update_profile')}}" method="post" id="edit_form">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label for="f_name">First Name</label>
+                                        <input type="text" name="f_name" id="f_name" value="{{f_name}}" class="form-control" required >
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="l_name">Last name</label>
+                                        <input type="text" name="l_name" id="l_name" value="{{l_name}}" class="form-control" required >
+                                    </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col-6">
+                                        <label for="f_name">Gender</label>
+                                        <select name="gender" id="gender" class="form-select" required >
+                                            <option value="">Select Gender</option>
+                                            <option value="Male" {% if profile['gender']=='Male' %} selected {% endif %}>Male</option>
+                                            <option value="Female" {% if profile['gender']=='Female' %} selected {% endif %}>Female</option>
+                                            <option value="Other" {% if profile['gender']=='Other' %} selected {% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="dob">Date of Birth</label>
+                                        <input type="date" name="dob" id="dob" value="{{profile['date_of_birth']}}" class="form-control" max="2025-12-31" min="1950-01-01" required >
+                                    </div>
+                                </div>
+                                <!-- <div class="row">
+                                    <div class="col-6">
+                                        <label for="c_num">Contact Number</label>
+                                        <input type="number" name="c_num" id="c_num" value="{{contact_num}}" class="form-control" required>
+                                    </div>                                    
+                                </div> -->
+                                <div class="row mt-5">
+                                    <div class="col-12 text-center">
+                                        <button type="submit" class="btn btn-dark">Update</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             
+        </div>
+        
+    </div>
+     
+</div>
+ 
+<script>
+    function myCategory(){
+        var cat = document.getElementById('complaint_category').value;
+        var sub_cat = document.getElementById('sub_category');
+
+        var corruption_mismanagement = document.getElementById('corr_mism');
+        var infrastructure_development = document.getElementById('infra_deve');
+        var scheme_program = document.getElementById('schm_pro');
+        var social_issues = document.getElementById('so_issue');
+        var grievance_redressal = document.getElementById('g_redressal');
+
+        if(cat == 1){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "block";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 2){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "block";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 3){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "block";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 4){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "block";
+            grievance_redressal.style.display = "none";
+        } else if(cat == 5){
+            sub_cat.disabled = false;
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "block";
+        } else {
+            sub_cat.disabled = true;
+            sub_cat.value = "";
+            corruption_mismanagement.style.display = "none";
+            infrastructure_development.style.display = "none";
+            scheme_program.style.display = "none";
+            social_issues.style.display = "none";
+            grievance_redressal.style.display = "none";
+        }
+
+
+    }
+    
+
+</script>
+
+{% endblock %}
