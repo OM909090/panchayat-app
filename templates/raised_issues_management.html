@@ -1,0 +1,120 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['user_name'] %}
+{% set nick_name = session['first_name'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set panchayat = session['panchayat'] %}
+
+{% block raised_issues %}
+
+
+<div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+    <div class="row mb-4">
+        <div class="col-8">
+            <div class="row">
+            {% for i in r_issues %}
+            {% set date = i['complain_raised_date'].split(', ') %}
+            {% if i['complain_status'] == 'Pending' %}
+            <div class="col-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h6 class="card-title d-flex justify-content-between">
+                            <span class="text-primary"> {{date[0]}}</span>
+                            <span>
+                                <a href="{{url_for('detailed_issues', t = i['token'])}}" class="text-dark"><i class="fa-solid fa-magnifying-glass"></i></a>
+                            </span>
+                        </h6>
+                        <hr>
+                        <h6 class="text-muted ">{{i['category']}}</h6>
+                        <h6>{{i['complaint_caption']|capitalize}}... </h6>
+
+                        
+                    </div>
+                    <div class="card-footer bg-info">
+                        <small>Complaint Status : <strong>{{i['complain_status']}} </strong></small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card bg-warning" id="Resolved_issue_section">
+                <div class="card-body">
+                    <h4 class="card-title">Resolved Issues</h4>
+                    <table class="table table-responsive border-warning">
+                        <thead class="bg-dark text-light">
+                            <tr>
+                                <th scope="col" class="px-2">#</th>
+                                <th scope="col">Complaint Info</th>
+                                <th scope="col"><i class="fas fa-ellipsis-v"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set count = namespace(value=1) %}
+                            {% for i in r_issues %}
+                            {% if i['complain_status'] == 'Closed' %}
+                            <tr>
+                                <td class="d-flex align-items-top px-2"><h6>{{"%02d" %  count.value}}</h6></td>
+                                <td class="">
+                                    <h6 class="mb-0 pb-0">{{i['sub_category']}}</h6>
+                                    <p class="mt-0 pt-0">{{i['complaint_caption']|capitalize}}</p>
+                                </td>
+                                <td> <a href="{{url_for('detailed_issues', t = i['token'])}}" class="btn btn-light btn-sm"><i class="fas fa-eye"></i></a></td>
+                            </tr>
+                            {% set count.value = count.value + 1 %}
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+         
+            <div class="card bg-secondary mt-4" id="Resolved_issue_section">
+                <div class="card-body">
+                    <h4 class="card-title">Rejected Issues</h4>
+                    <table class="table table-responsive border-secondary">
+                        <thead class="bg-dark text-warning">
+                            <tr>
+                                <th scope="col" class="px-2">#</th>
+                                <th scope="col" class="text-warning">Complaint Info</th>
+                                <th scope="col"><i class="fas fa-ellipsis-v"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set count = namespace(value=1) %}
+                            {% for i in r_issues %}
+                            {% if i['complain_status'] == 'Rejected' %}
+                            <tr>
+                                <td class="d-flex align-items-top px-2"><h6>{{"%02d" %  count.value}}</h6></td>
+                                <td class="">
+                                    <h6 class="mb-0 pb-0">{{i['sub_category']}}</h6>
+                                    <p class="mt-0 pt-0">{{i['complaint_caption']|capitalize}}</p>
+                                </td>
+                                <td> <a href="{{url_for('detailed_issues', t = i['token'])}}" class="btn btn-warning btn-sm"><i class="fas fa-eye"></i></a></td>
+                            </tr>
+                            {% set count.value = count.value + 1 %}
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            
+            
+        </div>
+    </div>
+
+     
+</div>
+        
+    </div>
+     
+</div>
+ 
+
+{% endblock %}
