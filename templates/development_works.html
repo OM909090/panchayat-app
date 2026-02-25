@@ -1,0 +1,182 @@
+{% extends "sidebar.html" %}
+
+{% set u_id = session['user_id'] %}
+{% set u_name = session['user_name'] %}
+{% set nick_name = session['first_name'] %}
+{% set email = session['email'] %}
+{% set contact_num = session['contact_num'] %}
+{% set panchayat = session['panchayat'] %}
+
+{% block dev_works %}
+
+
+<div class="col-xl-10 col-lg-10 col-md-9 col-sm-9">
+    <div class="row mb-4">
+       
+        <div  {% if session['user_type'] == 'Management' %} class="col-7" {% elif session['user_type'] == 'Admin' %} class="col-12" {% endif %}>            
+            <h3>Development Works</h3>
+            <p>List and details of Construction & development works </p>
+                <div class="row">
+                    {% for i in d_works %}
+                        <div  {% if session['user_type'] == 'Management' %} class="col-6" {% elif session['user_type'] == 'Admin' %} class="col-4" {% endif %}class="col-6">
+                            <div class="card border-0 shadow">
+                                <div class="card-body">   
+                                    <h6 class="text-primary card-title">{{i['w_name']}}</h6>
+                                    <span class="d-flex justify-content-between">                                        
+                                        <small class="text-muted float-end">{{i['d_start']}} - {{i['d_end']}}</small>
+                                        <small class="badge bg-warning text-dark">{{i['work_id']}}</small>
+                                    </span>
+                                    <hr>
+                                    <table>                                        
+                                        <tr>
+                                            <td><small>Activity:</small></td>
+                                            <th scope="col">{{i['activity']}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td><small>Scheme:</small></td>
+                                            <th scope="col">{{i['scheme']}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td><small>Expenditure:</small></td>
+                                            <th scope="col">{{i['expenditure']}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td><small>Estimate:</small></td>
+                                            <th scope="col">{{i['estimate']}}</th>
+                                        </tr>
+                                        <tr>
+                                            <td><small>Focus:</small></td>
+                                            <th scope="col">{{i['focus_area']}}</th>
+                                        </tr>
+                                        {% if i['desc'] %}
+                                        <tr>
+                                            <td><small>Desc.:</small></td>
+                                            <th scope="col">{{i['desc']}}</th>
+                                        </tr>
+                                        {% endif %}
+                                        
+                                    </table>                
+                                    
+
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-between">
+                                        <span>                                            
+                                            <p class="mb-0 pb-0"><small>Status :</small> <span class="text-primary">{{i['status']}}</span></p>
+                                        </span>
+                                        <span>
+                                            <a href="{{url_for('detailed_dev_works', w_id = i['work_id'])}}"><i class="fas fa-search"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                             
+        </div>
+        {% if session['user_type'] == 'Management' %}
+        <div class="col-5">
+            <div class="card bg-warning border-0">
+                <div class="card-header">
+                    <h4>Create Works</h4>
+                    <p>Add development work sanctioned by Govt or other sources </p>
+                </div>
+                <div class="card-body">
+                    <form action="{{url_for('development_work')}}" method="post">
+                    <div class="row">
+                        
+                        <div class="col-12 mb-2">
+                            <label for="w_name">Work name</label>
+                            <input type="text" name="w_name" id="w_name" class="form-control" placeholder="Ex: Water purification system" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="w_type">Work Type</label>
+                            <select name="w_type" id="w_type" class="form-select" required>
+                                <option value="">Select Work Type</option>
+                                <option value="Public Works">Public Works</option>
+                            </select>                            
+                        </div>
+                        <div class="col-6">
+                            <label for="activity">Activity Type</label>
+                            <select name="activity" id="activity" class="form-select" required>
+                                <option value="">Select Activity Type</option>
+                                <option value="Fresh">Fresh</option>
+                                <option value="Maintainance">Maintenance</option>
+                            </select>                            
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="scheme">Scheme</label>
+                            <!-- <input type="text" name="scheme" id="scheme" class="form-control" placeholder="Ex: XV Finance Commission"> -->
+                            <select name="scheme" id="scheme" class="form-select" required>
+                                <option value="">Select Scheme</option>
+                                <option value="XV Finance Commission">XV Finance Commission</option>
+                                <option value="5th State Finance Commission">5th State Finance Commission</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="d_start">Duration : Start</label>
+                            <input type="number" min="2025" max="2099" value="2025" name="d_start" id="d_start"   step="1" maxlength="4" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="d_end">End</label>
+                            <input type="number" min="2025" max="2099" value="2026" name="d_end" id="d_end"  step="1" maxlength="4" class="form-control" required>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <label for="expenditure">Expenditure</label>
+                            <input type="number" name="expenditure" id="expenditure" class="form-control" placeholder="Ex: &#8377; 1090000" required>
+                            
+                        </div>
+                        <div class="col-6 mt-2">
+                            <label for="estimate">Estimated Cost</label>
+                            <input type="number" name="estimate" id="estimate" class="form-control" placeholder="Ex: &#8377; 2010000" required>
+                        </div>
+                        <div class="col-6 mt-2">
+                            <label for="f_area">Focus Area</label>
+                            <select name="f_area" id="f_area" class="form-select" required>
+                                <option value="">Select Focus Area</option>
+                                <option value="Health">Health</option>
+                                <option value="Women & Child Development">Women & Child Development</option>
+                                <option value="Education">Education</option>
+                                <option value="Drinking Water">Drinking Water</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Roads">Roads</option>
+                            </select>                            
+                        </div>
+                        <div class="col-6 mt-2">
+                            <label for="component">Component</label>
+                            <select name="component" id="component" class="form-select" required>
+                                <option value="">Select Component</option>
+                                <option value="Untied Grant">Untied Grant</option>
+                                <option value="Tied Grant">Tied Grant</option>
+                                <option value="Devolution of Fund">Devolution of Fund</option>
+                            </select>                            
+                        </div>
+                        <div class="col-12 mt-2">
+                            <label for="desc">Description</label>
+                            <textarea name="desc" id="desc" rows="3" class="form-control" placeholder="Ex: Damaged classroom has been restored to a safe, functional, and conducive learning environment for students." ></textarea>
+                        </div>
+                        <div class="col-12 text-center mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg p-2">Create</button>
+                        </div>
+                    </div>
+                </form>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+     
+</div>
+        
+    </div>
+     
+</div>
+ 
+
+{% endblock %}
